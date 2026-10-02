@@ -44,17 +44,30 @@ class CalculadoraViajeViewModel: ViewModel() {
         _pasajeros.value = valor
         calcular()
     }
+    fun borrarTodo() {
+        _distancia.value = ""
+        _eficiencia.value = ""
+        _precio.value = ""
+        _pasajeros.value = ""
+        _litros.value = 0.0
+        _costo.value = 0.0
+        _costoPorPersona.value = 0.0
+    }
     private fun calcular() {
-        if (_pasajeros.value.isNotEmpty()) {
-            val pasajeros = _pasajeros.value.toDouble()
-            _costoPorPersona.value = _costo.value
-        }
-        val d = _distancia.value.toDouble()
-        val e = _eficiencia.value.toDouble()
-        val p= _precio.value.toDouble()
+        val d = _distancia.value.toDoubleOrNull()
+        val e = _eficiencia.value.toDoubleOrNull()
+        val p = _precio.value.toDoubleOrNull()
+        val pas = _pasajeros.value.toDoubleOrNull()
 
-        _litros.value = d / e
-        _costo.value=_litros.value*p
+        if (d != null && e != null && p != null && pas != null && e > 0 && pas > 0) {
+            _litros.value = d / e
+            _costo.value = _litros.value * p
+            _costoPorPersona.value = _costo.value / pas
+        } else {
+            _litros.value = 0.0
+            _costo.value = 0.0
+            _costoPorPersona.value = 0.0
+        }
     }
 
 }
