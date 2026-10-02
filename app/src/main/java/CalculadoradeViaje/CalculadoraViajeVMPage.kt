@@ -1,6 +1,5 @@
 package CalculadoradeViaje
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,10 +18,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun CalculadoraViajeVMPage(viewModel: CalculadoraViajeViewModel = viewModel()
+fun CalculadoraViajeVmPage(
+    viewModel: CalculadoraViajeViewModel = viewModel()
 ) {
 
     val distancia by viewModel.distancia.collectAsStateWithLifecycle()
+    val eficiencia by viewModel.eficiencia.collectAsStateWithLifecycle()
+    val litros by viewModel.litros.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -29,19 +32,13 @@ fun CalculadoraViajeVMPage(viewModel: CalculadoraViajeViewModel = viewModel()
             .padding(24.dp),
 
         horizontalAlignment = Alignment.CenterHorizontally,
-
         verticalArrangement = Arrangement.Center
     ) {
-
         Text(
             text = "Calculadora de Viaje",
             style = MaterialTheme.typography.headlineMedium
         )
-
-        Spacer(
-            modifier = Modifier.height(24.dp)
-        )
-
+        Spacer(modifier = Modifier.height(24.dp))
         OutlinedTextField(
             value = distancia,
             onValueChange = {
@@ -51,6 +48,24 @@ fun CalculadoraViajeVMPage(viewModel: CalculadoraViajeViewModel = viewModel()
                 Text("Distancia en km")
             },
             singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = eficiencia,
+            onValueChange = {
+                viewModel.cambiarEficiencia(it)
+            },
+            label = {
+                Text("Eficiencia (km/L)")
+            },
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Litros necesarios: $litros",
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

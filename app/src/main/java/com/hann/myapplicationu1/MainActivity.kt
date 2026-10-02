@@ -1,7 +1,8 @@
 package com.hann.myapplicationu1
 
-import CalculadoradeViaje.CalculadoraViajeVMPage
+
 import CalculadoradeViaje.CalculadoraViajeViewModel
+import CalculadoradeViaje.CalculadoraViajeVmPage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationU1Theme {
-                CalculadoraViajeVMPage()
+                CalculadoraViajeVmPage()
             }
         }
     }
