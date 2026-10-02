@@ -27,6 +27,9 @@ fun CalculadoraViajeVmPage(
     val litros by viewModel.litros.collectAsStateWithLifecycle()
     val precio by viewModel.precio.collectAsStateWithLifecycle()
     val costo by viewModel.costo.collectAsStateWithLifecycle()
+    val pasajeros by viewModel.pasajeros.collectAsStateWithLifecycle()
+    val costoPorPersona by viewModel.costoPorPersona.collectAsStateWithLifecycle()
+
 
     Column(
         modifier = Modifier
@@ -86,6 +89,24 @@ fun CalculadoraViajeVmPage(
 
         Text(
             text = "Costo total: $costo",
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = pasajeros,
+            onValueChange = {
+                viewModel.cambiarPasajeros(it)
+            },
+            label = {
+                Text("Número de pasajeros")
+            },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Costo por persona: $costoPorPersona",
             style = MaterialTheme.typography.bodyLarge
         )
     }
