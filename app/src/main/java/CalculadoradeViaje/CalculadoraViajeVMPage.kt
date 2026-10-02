@@ -25,6 +25,8 @@ fun CalculadoraViajeVmPage(
     val distancia by viewModel.distancia.collectAsStateWithLifecycle()
     val eficiencia by viewModel.eficiencia.collectAsStateWithLifecycle()
     val litros by viewModel.litros.collectAsStateWithLifecycle()
+    val precio by viewModel.precio.collectAsStateWithLifecycle()
+    val costo by viewModel.costo.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -65,6 +67,25 @@ fun CalculadoraViajeVmPage(
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = "Litros necesarios: $litros",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = precio,
+            onValueChange = {
+                viewModel.cambiarPrecio(it)
+            },
+            label = {
+                Text("Precio por litro ($)")
+            },
+            singleLine = true
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Costo total: $costo",
             style = MaterialTheme.typography.bodyLarge
         )
     }

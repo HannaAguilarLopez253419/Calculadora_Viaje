@@ -14,6 +14,12 @@ class CalculadoraViajeViewModel: ViewModel() {
 
     private var _litros= MutableStateFlow(0.0)
     val litros: StateFlow<Double> = _litros.asStateFlow()
+
+    private var _precio = MutableStateFlow("")
+    val precio: StateFlow<String> = _precio.asStateFlow()
+
+    private var _costo = MutableStateFlow(0.0)
+    val costo: StateFlow<Double> = _costo.asStateFlow()
     fun cambiarDistancia(valor:String){
         _distancia.value=valor
         calcular()
@@ -24,10 +30,18 @@ class CalculadoraViajeViewModel: ViewModel() {
         calcular()
     }
 
+    fun cambiarPrecio(valor: String) {
+        _precio.value = valor
+        calcular()
+    }
+
     private fun calcular() {
         val d = _distancia.value.toDouble()
         val e = _eficiencia.value.toDouble()
+        val p= _precio.value.toDouble()
 
         _litros.value = d / e
+        _costo.value=_litros.value*p
     }
+
 }
