@@ -2,11 +2,11 @@ package CalculadoradeViaje
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -28,14 +28,14 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TextField
-import java.nio.file.WatchEvent
-import androidx.compose.material3.FilterChip
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,230 +56,220 @@ fun CalculadoraViajeVmPage(
     val scrollState = rememberScrollState()
 
     Scaffold(
+        containerColor = Color(0xFFF7F1EE),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text("Calculadora de viajes")
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .verticalScroll(scrollState)
+                .fillMaxSize()
         ) {
             if (calculado) {
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .height(520.dp)
-                        .padding(20.dp)
+                        .background(Color(0xFFB46A72))
                 ) {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top =20.dp)
-                            .clip(
-                                RoundedCornerShape(
-                                    topStart = 40.dp,
-                                    topEnd=40.dp,
-                                    bottomStart = 25.dp,
-                                    bottomEnd = 25.dp
-                                )
-                            )
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(
-                                top=80.dp,
-                                start=25.dp,
-                                end=25.dp,
-                                bottom=25.dp
-                            ),
+                            .fillMaxWidth()
+                            .padding(vertical = 48.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text="Gasto total",
-                            style = MaterialTheme.typography.titleMedium
+                            text = "Gasto total",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White.copy(alpha = 0.85f)
                         )
                         Text(
-                            text = "%.2f L".format(costo),
-                            style = MaterialTheme.typography.titleLarge
+                            text = "$%.2f".format(costo),
+                            style = MaterialTheme.typography.displayLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
-                        Spacer(
-                            modifier = Modifier.height(15.dp)
-                        )
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Consumo estimado"
+                            text = "%.2f L de gasolina".format(litros),
+                            color = Color.White.copy(alpha = 0.85f)
                         )
-                        Text(
-                            text = "%.2f L".format(litros),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Spacer(
-                            modifier = Modifier.height(15.dp)
-                        )
-                        Text(
-                            text = "Consumo base: %.2f L".format(litrosBase)
-                        )
-                        Text(
-                            text = "Extra por carga: %.2f L".format(litrosExtra)
-                        )
-                        Spacer(
-                            modifier = Modifier.height(15.dp)
-                        )
-                        Text(
-                            text = "Costo por persona"
-                        )
-                        Text(
-                            text = "$%.2f".format(costoPorPersona),
-                            style = MaterialTheme.typography.titleLarge
-
-                        )
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-                        Button(
-                            onClick = {
-                                viewModel.nuevoViaje()
-                            },
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        ) {
-                            Text(
-                                text = "Reiniciar"
-                            )
-                        }
                     }
-                }
-            } else {
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(20.dp)
-                ) {
                     Column(
-                        modifier = Modifier.padding(16.dp)
-                            .fillMaxSize()
-                            .padding(16.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                            .background(Color(0xFFFFFBFE))
+                            .padding(24.dp)
                     ) {
-                        Text("Ingresa la distancia")
-                        OutlinedTextField(
-                            value = distancia,
-                            onValueChange = { distanciaingresada ->
-                                viewModel.cambiarDistancia(distanciaingresada)
-                            },
-                            label = {
-                                Text("Distancia en km")
-                            },
-                            modifier = Modifier
-                                .padding(start = 10.dp)
+                        FilaDesglose(
+                            titulo = "Consumo base",
+                            valor = "%.2f L".format(litrosBase)
                         )
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
+                        FilaDesglose(
+                            titulo = "Extra por carga",
+                            valor = "%.2f L".format(litrosExtra)
                         )
-                        Text("Ingresa el consumo del vehiculo")
-                        OutlinedTextField(
-                            value = eficiencia,
-                            onValueChange = { eficienciaingresada ->
-                                viewModel.cambiarEficiencia(eficienciaingresada)
-                            },
-                            label = {
-                                Text("Eficiencia en km/L")
-                            },
-                            modifier = Modifier
-                                .padding(start = 10.dp)
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        FilaDesglose(
+                            titulo = "Costo por persona",
+                            valor = "$%.2f".format(costoPorPersona)
                         )
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-                        Text("Ingresa el precio de gasolina")
-                        OutlinedTextField(
-                            value = precio,
-                            onValueChange = { precioingresado ->
-                                viewModel.cambiarPrecio(precioingresado)
-                            },
-                            label = {
-                                Text("Gasolina en L")
-                            },
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                        )
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-                        Text("Ingresa la cantidad de personas que viajaran")
-                        OutlinedTextField(
-                            value = pasajeros,
-                            onValueChange = { pasajerosingresados ->
-                                viewModel.cambiarPasajeros(pasajerosingresados)
-                            },
-                            label = {
-                                Text("Num pasajeros")
-                            },
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                        )
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
-                        Text("Nivel de carga:")
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            FilterChip(
-                                selected = carga == 1.0,
-                                onClick = {
-                                    viewModel.cambiarCarga(1.0)
-                                },
-                                label = {
-                                    Text("Ligero")
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFFA8B58A)
-                                )
-                            )
-                            FilterChip(
-                                selected = carga == 1.10,
-                                onClick = {
-                                    viewModel.cambiarCarga(1.10)
-                                },
-                                label = {
-                                    Text("Media")
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFFA8B58A)
-                                )
-                            )
-                            FilterChip(
-                                selected = carga == 1.20,
-                                onClick = {
-                                    viewModel.cambiarCarga(1.20)
-                                },
-                                label = {
-                                    Text("Alto")
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color(0xFFA8B58A)
-                                )
-                            )
-                        }
-                        Spacer(
-                            modifier = Modifier.height(20.dp)
-                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+
                         Button(
-                            onClick = {
-                                viewModel.calcularViaje()
-                            },
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            onClick = { viewModel.nuevoViaje() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFFB46A72)
                             )
                         ) {
-                            Text("Calcular")
+                            Text("Reiniciar")
+                        }
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier.verticalScroll(scrollState)
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        shape = RoundedCornerShape(28.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxSize()
+                                .padding(16.dp)
+                        ) {
+                            CampoTexto(
+                                titulo = "Ingresa la distancia",
+                                etiqueta = "Distancia en km",
+                                valor = distancia,
+                                onValueChange = { viewModel.cambiarDistancia(it) }
+                            )
+                            CampoTexto(
+                                titulo = "Ingresa el consumo del vehiculo",
+                                etiqueta = "Eficiencia en km/L",
+                                valor = eficiencia,
+                                onValueChange = { viewModel.cambiarEficiencia(it) }
+                            )
+                            CampoTexto(
+                                titulo = "Ingresa el precio de gasolina",
+                                etiqueta = "Gasolina en L",
+                                valor = precio,
+                                onValueChange = { viewModel.cambiarPrecio(it) }
+                            )
+                            CampoTexto(
+                                titulo = "Ingresa la cantidad de personas que viajaran",
+                                etiqueta = "Num pasajeros",
+                                valor = pasajeros,
+                                onValueChange = { viewModel.cambiarPasajeros(it) }
+                            )
+                            Spacer(
+                                modifier = Modifier.height(20.dp)
+                            )
+                            Text("Nivel de carga:")
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                ChipCarga("Ligero", carga == 1.0) { viewModel.cambiarCarga(1.0) }
+                                ChipCarga("Media", carga == 1.10) { viewModel.cambiarCarga(1.10) }
+                                ChipCarga("Alto", carga == 1.20) { viewModel.cambiarCarga(1.20) }
+                            }
+                            Spacer(
+                                modifier = Modifier.height(20.dp)
+                            )
+                            Button(
+                                onClick = {
+                                    viewModel.calcularViaje()
+                                },
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFB46A72)
+                                )
+                            ) {
+                                Text("Calcular")
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CampoTexto(
+    titulo: String,
+    etiqueta: String,
+    valor: String,
+    onValueChange: (String) -> Unit
+) {
+    Text(titulo)
+    OutlinedTextField(
+        value = valor,
+        onValueChange = onValueChange,
+        label = { Text(etiqueta) },
+        modifier = Modifier.padding(start = 10.dp)
+    )
+    Spacer(modifier = Modifier.height(20.dp))
+}
+
+@Composable
+fun ChipCarga(
+    texto: String,
+    seleccionado: Boolean,
+    onClick: () -> Unit
+) {
+    FilterChip(
+        selected = seleccionado,
+        onClick = onClick,
+        label = { Text(texto) },
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = Color(0xFFB46A72).copy(alpha = 0.12f),
+            labelColor = Color(0xFF5A2F35),
+            selectedContainerColor = Color(0xFFB46A72),
+            selectedLabelColor = Color.White
+        )
+    )
+}
+
+@Composable
+fun FilaDesglose(
+    titulo: String,
+    valor: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = titulo,
+            modifier = Modifier.weight(1f),
+            color = Color(0xFF49454F)
+        )
+        Text(
+            text = valor,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF1C1B1F)
+        )
     }
 }

@@ -98,20 +98,15 @@ class CalculadoraViajeViewModel: ViewModel() {
             pasajeros > 0
         ) {
 
-            // Consumo base
             _litrosBase.value =
                 distancia / eficiencia
 
-            // Litros adicionales por la carga
             _litrosExtra.value = _litrosBase.value * (_carga.value - 1)
 
-            // Consumo total
             _litros.value =_litrosBase.value + _litrosExtra.value
 
-            // Costo total
             _costo.value = _litros.value * precio
 
-            // Costo por persona
             _costoPorPersona.value =
                 _costo.value / pasajeros
 
