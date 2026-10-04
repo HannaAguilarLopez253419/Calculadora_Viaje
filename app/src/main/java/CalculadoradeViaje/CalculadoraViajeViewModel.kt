@@ -25,6 +25,19 @@ class CalculadoraViajeViewModel: ViewModel() {
 
     private var _costoPorPersona = MutableStateFlow(0.0)
     val costoPorPersona: StateFlow<Double> = _costoPorPersona.asStateFlow()
+
+    private var _calculado = MutableStateFlow(false)
+    val calculado: StateFlow<Boolean> = _calculado.asStateFlow()
+
+    private var _carga = MutableStateFlow(1.0)
+    val carga : StateFlow<Double> = _carga.asStateFlow()
+
+    private var _litrosBase = MutableStateFlow(0.0)
+    val litrosBase: StateFlow<Double> = _litrosBase.asStateFlow()
+
+    private var _litrosExtra = MutableStateFlow(0.0)
+    val litrosExtra: StateFlow<Double> = _litrosExtra.asStateFlow()
+
     fun cambiarDistancia(valor:String){
         _distancia.value=valor
         calcular()
@@ -44,26 +57,67 @@ class CalculadoraViajeViewModel: ViewModel() {
         _pasajeros.value = valor
         calcular()
     }
+
     fun borrarTodo() {
         _distancia.value = ""
         _eficiencia.value = ""
         _precio.value = ""
         _pasajeros.value = ""
+
+        _litrosBase.value = 0.0
+        _litrosExtra.value = 0.0
         _litros.value = 0.0
         _costo.value = 0.0
         _costoPorPersona.value = 0.0
+
+        _carga.value = 1.0
+    }
+    fun cambiarCarga(valor: Double){
+        _carga.value= valor
+    }
+    fun calcularViaje() {
+        calcular()
+        _calculado.value = true
+    }
+    fun nuevoViaje() {
+        borrarTodo()
+        _calculado.value = false
     }
     private fun calcular() {
-        val d = _distancia.value.toDoubleOrNull()
-        val e = _eficiencia.value.toDoubleOrNull()
-        val p = _precio.value.toDoubleOrNull()
-        val pas = _pasajeros.value.toDoubleOrNull()
+        val distancia = _distancia.value.toDoubleOrNull()
+        val eficiencia = _eficiencia.value.toDoubleOrNull()
+        val precio = _precio.value.toDoubleOrNull()
+        val pasajeros = _pasajeros.value.toDoubleOrNull()
 
-        if (d != null && e != null && p != null && pas != null && e > 0 && pas > 0) {
-            _litros.value = d / e
-            _costo.value = _litros.value * p
-            _costoPorPersona.value = _costo.value / pas
+        if (
+            distancia != null &&
+            eficiencia != null &&
+            precio != null &&
+            pasajeros != null &&
+            eficiencia > 0 &&
+            pasajeros > 0
+        ) {
+
+            // Consumo base
+            _litrosBase.value =
+                distancia / eficiencia
+
+            // Litros adicionales por la carga
+            _litrosExtra.value = _litrosBase.value * (_carga.value - 1)
+
+            // Consumo total
+            _litros.value =_litrosBase.value + _litrosExtra.value
+
+            // Costo total
+            _costo.value = _litros.value * precio
+
+            // Costo por persona
+            _costoPorPersona.value =
+                _costo.value / pasajeros
+
         } else {
+            _litrosBase.value = 0.0
+            _litrosExtra.value = 0.0
             _litros.value = 0.0
             _costo.value = 0.0
             _costoPorPersona.value = 0.0
