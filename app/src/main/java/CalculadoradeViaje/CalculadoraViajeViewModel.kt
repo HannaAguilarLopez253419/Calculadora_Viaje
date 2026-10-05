@@ -40,6 +40,15 @@ class CalculadoraViajeViewModel : ViewModel() {
     private var _calculado = MutableStateFlow(false)
     val calculado: StateFlow<Boolean> = _calculado.asStateFlow()
 
+    private var _nombre = MutableStateFlow("")
+    val nombre : StateFlow<String> = _nombre.asStateFlow()
+
+    private var _carrera = MutableStateFlow("")
+    val carrera : StateFlow<String> = _carrera.asStateFlow()
+
+    private var _matricula = MutableStateFlow(0.0)
+    val matricula : StateFlow<Double> = _matricula.asStateFlow()
+
     fun cambiarDistancia(valor: String) {
         _distancia.value = valor
     }
@@ -68,6 +77,12 @@ class CalculadoraViajeViewModel : ViewModel() {
     fun nuevoViaje() {
         borrarTodo()
         _calculado.value = false
+    }
+
+    fun mostrarDatos(){
+        _matricula.value = 253419.0
+        _nombre.value = "Hanna Guadalupe Aguilar Lopez"
+        _carrera.value = "Ing. Software"
     }
 
     fun borrarTodo() {

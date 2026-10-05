@@ -54,6 +54,9 @@ fun CalculadoraViajeVmPage(
     val costo by viewModel.costo.collectAsStateWithLifecycle()
     val costoPorPersona by viewModel.costoPorPersona.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+    val name by viewModel.nombre.collectAsStateWithLifecycle()
+    val carrera by viewModel.carrera.collectAsStateWithLifecycle()
+    val matricula by viewModel.matricula.collectAsStateWithLifecycle()
 
     Scaffold(
         containerColor = Color(0xFFF7F1EE),
@@ -206,6 +209,14 @@ fun CalculadoraViajeVmPage(
                             ) {
                                 Text("Calcular")
                             }
+                            Profile(
+                                nombre = name,
+                                matricula = matricula,
+                                carrera = carrera,
+                                onClick = {
+                                    viewModel.mostrarDatos()
+                                }
+                            )
                         }
                     }
                 }
@@ -273,3 +284,30 @@ fun FilaDesglose(
         )
     }
 }
+
+@Composable
+fun Profile(nombre: String, matricula: Double, carrera: String, onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = "Nombre: $nombre")
+            Text(text = "Matrícula: $matricula")
+            Text(text = "Carrera: $carrera")
+            Button(
+                onClick = onClick
+            ) {
+                Text("Mostrar datos")
+            }
+        }
+    }
+}
+//crear un componente (components) reutilizable llamado Profile, nombre y matricula y carrera
+// y que tenga un boton y cuando se le de clic en la viewmodel debe de tener un metodo
+// y cargar la info A ESOS composable
